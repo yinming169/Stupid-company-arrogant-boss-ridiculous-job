@@ -1,0 +1,53 @@
+<!-- page 414 -->
+LGWORLD	1A±%	Á1/4Ç	www.PL
+·404	低压成套开关设备的原理及其控制技术
+START1，START1又作为第2个模块的使能允许开关，如此周而复始地延续到第7
+而第7个模块的DRY输出 START7又作为第1个模块的使能允许开关。这样一来。这7个
+MODMASTK就依次自动循环往复地执行往链路中的各个从站中读取数据的操作。
+3. PLC:07KR51 上行通信接口的设定和操作
+当上位系统与07KR51交换信息时，PLC的对应通信接口必须设置为链路中的从站。在
+图7-18 中，PLC的 COM1 接口被设置为从站接口。
+将07KR51的COM1 接口设置为从站后，因为COM1 接口需要回应上位系统发送的读写
+信息，这需要用 SINIT模块设定物理层协议，但不需要 MODMASTK 模块，如图 7-21 所示。
+在图 7-21 中，SINIT 定义了 07KR51 的 COM1 接口，其通信速率为 19200bit/s。COM1
+通信接口的ID 地址需要利用编程软件在 CONFIGRATION 中设定。设定完毕后，PLC 的内存
+对上位机完全开放。
+因为上位系统并没有直接读取现场的数据，现场数据是通过PLC来转发给上位系统的，
+所以PLC在低压成套开关设备中被称为通信管理机。
+作为通信管理机，PLC需要将已经获取的现场进行处理和打包，同时放置到某固定位地	永宏
+址的寄存器组中。
+在图7-21中，我们看到在PACK16模块的左侧有16个开关量信息，例如I段进线断	1四方Ⅰ维控
+路器 QF；和Ⅱ段进线断路器QF2的状态信息等。PACK16 模块将这16个信息编写组合成
+为1个字，并且保存在寄存器48561中。这样处理后，上位系统从寄存器48561中能获知
+低压成套开关设备两段进线断路器、母联断路器、若干馈电断路器的状态和保护动作状
+www.PLCworld.cn	态信息。	www.PLCworld.cn
+SINIT	15021230050
+COMT	TRUE
+BAUD[02)
+STOPI
+DATAS
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+ENDS
+ENDS	RACK16数据定义表	RACK16数据定义表
+OF	FALSE	FALSE
+QFT F
+QF	TALSE
+QF2 F	FALST	FALSE
+QF	FALSE
+OF3 F
+LFTAOF	FALSE
+LFIAQF F	FALSE
+LF4TQF	FALSE
+TF4DOF	LOCAI. HH MODE	FALSE
+LF5DQF	LOCAL HA MOOE
+LFSDXQF F	LOCAL AH MOXDE
+LF8DQF	LOCAL. AA MOX
+LFSDOF Y
+FALSE	REMOTE HH MODE	MW02302 48562
+FALSE	MW02301_48561	REMKJTE AA MKE
+图7-21 作为从站时的 07KR51 通信管理
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

@@ -1,0 +1,23 @@
+<!-- page 349 -->
+PLCWORD	Á1/4C	www.PL
+6章	低压成套开关设备的辅助回路及控制原理
+DI	81.5
+814	OVA
+333	SII	CT8
+tgs	29	D14	R2	VOA2	作为起动发电机的命令接口
+L2X	D13	1T8
+325	D12	018
+121	III	RLOOM	YVCA	至发电机
+010	N
+DOOO	7	Z	∠ovx
+AM	SA3	HLiHL2HL,KA6	利用 PLC 实现测控的范例系统母联主回路和辅助回路	永宏四方维控
+KA
+VOA
+www.PLCworld.cn	www.PLCworld.cn	o人
+SB2E	37	15021230050
+YCKA31
+8
+3	图6-47
+0	'es
+1008	C001
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

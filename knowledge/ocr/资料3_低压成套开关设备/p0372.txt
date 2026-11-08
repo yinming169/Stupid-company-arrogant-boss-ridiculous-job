@@ -1,0 +1,55 @@
+<!-- page 372 -->
+LGWORLD	±/4	Á14Ç	www.PLc
+·362·	低压成套开关设备的原理及其控制技术
+<11	FU	101
+13	SB2
+N	S8F
+10	107	QF	KA	KA1	KA
+QF	A1	U1	C1	OF:SY
+QF	A17
+F-业LuLE-
+1:0n	95	al	S	109	11	113	115	117
+2:0ff
+3:Teat	4 Withdrrw
+A4)1 PA	M	VC
+5: Isolate position	TA
+TA	B3401	PA	KA,宁KA宁	8	8
+U2	1L.	HL3
+C401	PA
+X10.1.29-个	N
+N401
+KA
+KA:	永宏
+图 6-72 T1 - T6 断路器的馈电控制原理图
+线位号125~129的外引辅助触点被送至外部需用之处。	四方
+3. 远方监测馈电回路工作状态
+图6-73所示为远方电力监控系统监视馈电回路的电流量即遥测电流量的方法，以及远
+方电力监控系统监视馈电回路断路器工作状态即遥信量的方法。	维控
+L1	www.PLCworld.cn
+www.PLCworld.cn	12
+1.3	LID4
+N	SB	SB	KA	15021230050
+KA	KA2	QF	A	KA	KA)
+98	123	0
+F-SJE	QF
+1:0n	95	121
+2:0f	QF	103	105	L01	109	111	113
+3.Tent	A401PA
+4:Withdraw
+5:Isolate position	v1
+B401
+TA	HL.	8
+N401	X10.1.29	N
+TA	A411,X10.1.11	RS4K5+
+TA	B411X10.1.12	AII	PSISE
+TA C411 XID 1.13	A12	A13	RCO
+GB
+N411.X10.1.14	A132
+X10.1.23 125 KA3	AICOM
+127X10.1.22	15485+
+KA	128X10.123	ESARS
+RS132	GR
+D132
+DCOM
+图6-73 馈电回路中利用遥信模块 RSI32 和遥测模块 RCM32 采集开关量和电流量
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

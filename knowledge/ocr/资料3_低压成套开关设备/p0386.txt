@@ -1,0 +1,16 @@
+<!-- page 386 -->
+LGWORLD	±/4	Á14C	www.PL
+·376·	低压成套开关设备的原理及其控制技术
+(NOPN	实物外的行制的行收于关解	IOOP
+d	VON
+CNDAPT	5	M102 - M 构建的电动机Y - △起动接线图	永宏四方维控|15021230050
+D01WN/E0	0011N/20	91X	1PX	C+X	C+X	X4:4	STX	9+X	LtX	VIX	6+X
+STARTI	STARTL	CR	UNI	INI	2VND
+JOLS	V
+SHELD	RS4B5A	SHIELD	CITIIHS
+www.PLCworld.cn	www.PLCworld.cn
+图6-82
+WN
+2
+0v.1
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

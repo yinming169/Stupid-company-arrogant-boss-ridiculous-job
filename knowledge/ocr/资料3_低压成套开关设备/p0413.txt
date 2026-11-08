@@ -1,0 +1,44 @@
+<!-- page 413 -->
+PLCWORD	IA+	4'Á1/4C	www.PL
+5第7章 低压成套开关设备中的测控和信息交换
+ZL——指定物理层字节传输中数据位的长
+度，“WORK8”表示数据位为8位。	TRUE	SINIT
+由此可以看出，SINIT模块定义了物理层接	FREI
+COM2	SSK
+口的字节数据传输格式。SINIT 模块符合 PLC 编	BAUD9600	BAUD
+程语言的IEC 61131-3标准，很容易移植和应用	STOP_1	STOP
+WORK_8	ZL
+到其他 PIC 中去。	FALSE	PTY
+图 7-18 中还有-个模块是 MODMASTK，其	FALSE	EO
+用途是对数据链路层的 MODBUS 通信帧进行定	FALSE	ECHO
+FALSE	SBRK
+义。对 MODMASTK 模块的解释如图 7-20 所示。	FALSE	FEND
+图7-20中：	ENDS	ENDS
+FREI——MODMASTK 模块的使能允许开关；	ENDS	ENDS
+COM——指定通信接口，“COM2”表示指定	图 7-19 SINIT 模块的意义和解释
+接口是 COM2；
+SLAV——给指定从站的ID地址，“SLAVE01”表示从站的地址是01；
+FCT——指定通信帧的命令项，“FUNCTION_04”表示功能码是OX04H，即读寄存器中	永宏
+的内容；
+TIME——指定主站等待从站返回数据的时间，“TIME100MS”表示等待100ms；	四方
+ADDR——指定从站寄存器地址，“ADDRESS42000”表示寄存器地址是42000；
+DATA——指定 PLC 中数据存放的地址，“MW020008512”表示在 PLC 中数据存放在	维控
+www.PLCworld.cn	寄存器 MW020.00 中，MODBUS 地址是48512；
+RDY =1。RDY 常常用于启动下一级 MODMASTK 模块；	15021230050
+ERR——表示出错开关量；
+ERN——表示错误编码。
+MODMASTK
+START7	FREI
+COM2	COM
+SLAVE01	SLAV
+FUNCTION_04	FCT
+TIME100MS	TIME
+ADDRESS42000	ADDR	RDY	START1
+NUMBER_12	SN	ERR	ID1_ERROR_CODE
+MW02000_8512	DATA	ERN	ID01_ERRORWORD
+图 7-20 MODMASTK 模块的意义和解释
+由此可见，MODMASTK 模块定义了MODBUS- RTU的信息帧格式，以及待获取数据的
+存放位置和已读取数据的存放位置。与 SINIT 模块类似，MODMASTK 模块也符合 PLC 编程
+语言的IEC 61131-3 标准，很容易移植和应用到其他 PLC 中去。
+图7-18中有7个MODMASTK 模块，分别对应于 7台仪表。其中第1个模块的DRY 是
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

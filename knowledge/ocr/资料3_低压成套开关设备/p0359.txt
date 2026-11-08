@@ -1,0 +1,44 @@
+<!-- page 359 -->
+PLCWORD	1A+%	4Á14C	www.PL
+第6章 低压成套开关设备的辅助网路及控制原理
+QF3	KA|SB	SB2
+BUS	DICOM	323	325	327	329	333
+0	SA3	③
+至发电机
+ABB	RLON	07KR51	KAG	作为起动发电机的命令接口
+(COMI	z	RL0
+301	CA31
+N	KAG
+图6-62 起动发电机的命令触点
+答案是肯定的，但需要为07KR51（或者其他类型PLC）的寄存器地址设置保护，利用PLC
+内部的电池确保在辅助电源停电时间能维持PLC的程序现场。关于如何设置寄存器地址保
+护见07KR51（或者其他类型PLC）的使用说明书。	永宏
+注意：所有的PIC都有此功能，但此功能较为隐蔽，需要仔细研读所用PLC的技术说
+明书。	四方
+第二步：对断路器实施投退操作。
+首先看图6-63 左边的 AND输入条件，分别是：BZTSTEP1、INCOMING4LV、AUTO	维控
+和 AA_G_START 等四个变量，其中INCOMING4_LV 是发电机进线侧的低电压信号。
+www.PLCworld.cn
+AND
+www.PLCworld.cn	FTATUB	AND
+STATU2
+TUN	STATU4	AA_QF_BZTYO	15021230050
+T306MSEN1	OR
+SATS	STATUS	AND
+STATUA	(AA QF2 WZTYO
+AND
+TON
+STATUY	AND	TIS
+(AA QF) RZTIVC)
+图 6-63 对断路器实施投退操作
+当发电机工作正常后，对其输出电压实施监视的变量 INCOMING4LV =0。AND 模块
+输出端的意义是：程序进程在BZTSTEP1下，系统的操作模式为自动，发电机已经起动且输
+出电压正常。AND的输出经过500ms的延时后作为进一步对各个断路器执行分闸、合闸操
+作的依据。
+因为此时已经是双路失电压，所以首先要分断各段进线断路器。对于Ⅰ段进线断路器
+QF1对应的电力系统状态必然在 STATU2、STATU4、STATU6 三者之中，AND 模块将状态信
+息结合其前级 AND 的输出逻辑与后使得 QF1的分闸变量 AA_QF1BZTYO 置位，AA
+QFBZTYO置位后驱动操作执行机构使得QF分闸。
+同理，Ⅱ段进线断路器 QF2 对应的电力系统状态必然在 STATU3、STATU4、STATU5三
+者之中，AND模块将状态信息结合其前级 AND的输出逻辑与后使得QF2的分闸变量AA
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

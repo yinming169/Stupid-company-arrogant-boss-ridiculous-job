@@ -1,0 +1,24 @@
+<!-- page 380 -->
+GWOR!D	Á1/4Ç	www.PL
+4
+370	低压或套开关设备的原理及其控制技术
+661	HL
+(HM)
+KM	1	IH
+121
+W
+S1T01X	X10.1.16
+WN
+X10.1.13	KM	电动机星-三角起动的控制原理图
+X10.1.17	m	#1°101X	KM3	永宏四方维控
+Ens	'wx
+00	远方	m	2	2
+101	11
+www.PLCworld.cn	www.PLCworld.cn	15021230050
+01°101X	S SASMN	8L-9
+8
+100N
+Sod o	01	WN
+mp
+-d	1	2
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

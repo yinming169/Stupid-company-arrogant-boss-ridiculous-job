@@ -1,0 +1,44 @@
+<!-- page 93 -->
+PLCWORD	IA+%	4'Á1/4C	www.PL
+第1章 低压成套开关设备的基本概念和基础知识
+相接地故障还是三相不平衡，单相接地故障电流或者三相不平衡造成的中性线电流均
+流过 QF21 回路的 N 线和 PE线。因为 QF21 的 RCD 保护作用，QF21 处于保护动作状态，无
+法进行有效的合闸。反之亦然。
+图中从 QF21 回路的中性线或者 PE 线流过的电流就是非正规路径的中性线电流。非正
+规路径的中性线电流会引起一些不良后果。例如非正规路径中性线电流所流经的通路有可能
+形成包绕环，包绕环内产生的磁场将可能对敏感信息设备产生干扰，同时还有可能产生断路
+器误动作。
+解决的办法就是将QF11和QF21采用四极开关，切断故障电流流过的通路。
+2）双路配电变压器互为备用电源，或者变压器与柴油发电机互为备用电源，且变压器
+和发电机的中性点均就近直接接地。若两套电源共用低压成套开关设备，则进线回路应当采
+用四极开关。
+标准摘录：
+Figure 31A2-TN-S system with separate earthed line conductor and
+protective conductor throughout the system
+- Distribution(if any)	永宏Ⅰ四方维控
+Sourou	Insallation
+-L1
+-L2
+-L3
+-PE
+www.PLCworld.cn	www.PLCworł:n†
+Exposed-conductive-part	15021230050
+Earthing at
+the source
+Earthing of soystem through	one or more earth electrodes
+IEC 60364 中的 TN - S 接地系统
+IEC 60364 – 1—2005 《Low - voltage electrical installations Part 1: Fundamental princi-
+ples，assessment of general characteristics，definitions》（低压电气装置，第 1 部分：基本原
+则、一般特性评估和定义）的摘录。
+图中，
+Source———电源；
+Installation———装置；
+Earthing at the source——在电源处接地;
+Earthing in the distribution—在配电系统中的接地;
+Earthing of system through one or more earth electrodes—系统的接地可通过一个或者
+多个接地极来实现；
+Exposed - conductive -part——外露可导电部分；
+Distribution（if any）———配电系统（如果有）。
+我们从中看到，TN-S是可以有多点接地的。我们看到变压器的中性点可以就地直接接
+地，而低压成套开关设备的进线回路中可以再次接地。
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

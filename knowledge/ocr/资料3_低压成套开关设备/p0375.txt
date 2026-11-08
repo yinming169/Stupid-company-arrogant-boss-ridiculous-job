@@ -1,0 +1,21 @@
+<!-- page 375 -->
+LAWORID	'Á1/4C	www.PL
+低压成套开关设备的辅助回路及控制原理
+2	HL3
+HN	ELRHL1HL
+KM	21
+11
+- - - -
+X10.1.12	X10.1.13	X10.1.14	电动机直接起动的控制原理图	永宏四方维控|15021230050
+PMS
+m	ELR	0	00	m	START	M	11
+1	Z	X10121
+www.PLCworld.cn	www.PLCworld.cn
+X10.1.10	6-9
+8696	11
+B401	N440	29
+IC|FF	5:lbolate poaltion
+S	4:With draw
+1:	2:or	e
+PDG
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

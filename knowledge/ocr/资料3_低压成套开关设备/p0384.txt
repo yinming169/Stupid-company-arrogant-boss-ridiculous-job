@@ -1,0 +1,23 @@
+<!-- page 384 -->
+LGWORLD	±%4	Á1/4Ç	www.PL
+·374.	低压或套开关设备的原理及其控制技术
+ONWN	0
+可净引生要身括动规据	3	作击
+M102 - M构建的电动机直接起动接线图	永宏Ⅰ四方维控1
+IND N	H
+5
+V1X	FIX	X:1X	X16	LIX	8:1X	0-1X	X1:10	11-1X	X1-12	CUIX	411X	S11X	911X	1-0X	CX	99X	L+X	04X	01*%	1141
+2102	START	START2	0NT	INI	VND	onp
+LTI	dO1P	www.PLCworld.	818	1731	VCA
+www.PLCworld.cn	cn	ASC	15021230050
+SHELD	BSS8	RS5SA	SEIES	SHELD	GND
+1	10A	V	Z0UN	08-9
+≤	z
+LEX	8UCX	6CX	X3:10	1EX	X3:12	CUEX	X2	FCX	XCX	X28
+系统后台	1EX	CCX	X3:4	SEX	X3:6
+冗余RS485通信网络
+F	nu
+-
+UV W	ov1
+0
+PLC 变频器 触摸屏 伺服 软启动 电气工程	15021230050

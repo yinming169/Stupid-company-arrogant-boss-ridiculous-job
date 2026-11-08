@@ -1,0 +1,29 @@
+<!-- page 417 -->
+WORLD	Á1/4C	www.PL
+享集	低压成套开关设备中的测控和信息交换
+S/16S
+6/WEES
+W/2
+HIHI2HIIKA	VZMA
+18145	2
+27
+2
+20
+KV1
+11	121	永宏四方维控
+m	低压进线回路的通信范例图
+SIL
+AN	0m	KT28
+www.PLCworld.cn	www.PLCworld.cn	Sdn
+KV1	KT1	INH	通信接11	RS485	RSSS5	7-24	15021230050
+通信电缆
+C601
+N	201301
+101
+M	r	补偿装
+A441	B401	C401	10tN	A411
+E
+ONV
+10KV	112
+T
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

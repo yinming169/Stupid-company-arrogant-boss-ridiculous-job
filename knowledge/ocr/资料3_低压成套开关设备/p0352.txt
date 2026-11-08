@@ -1,0 +1,46 @@
+<!-- page 352 -->
+LGWORLD	±4	'Á1/4Ç	www.PL口c
+·342	低压成自开关设备的原理及其控制技术
+秋态分析程序
+QF	AND	所有断路器均分断	QF	AND	1号进地欣障
+Q5	2号进线和母联闭合
+OF	of	OR
+STATU1	OF	STATUS
+Q6	AND	1号进线闭合	QF	AND	2号进线故障
+0	OF	1号进线和每联闭合
+05	OF
+STATU2	STATU6
+QF	AND	2号进线闭合	QF1	AND	发电机进线闭合
+0F	QF2
+05	QF3
+Of,	STATUJ	OF4	STATU?
+05	AND	正常工作	OF	AND	发电机进线和母联
+OF2	闭合
+Qf.	OF.	0F,
+STATU4	进线和母联均闭合	STATUE
+QF	AND	仅每联闭合	QF	AND
+非法状态
+Q6	永宏
+QF4	STATU9	QF4	STATUIO	1四方
+图6-52 电力系统状态分析程序
+所有的状态变量 STATU1~STATU10 均使用与门模块来判断断路器状态。以 STATU1为	维控
+例，STATU1的判断式如下：
+LCworld.cn	STATW(PLCQ, • QF4
+电力系统状态的定义参见表6-22。为了读程序方便，重复罗列如下：	15021230050
+表6-22 电力系统狱态
+电力系统	审电连线	市电进线	母联	发电机连线
+的状态	QF1	QF2	QF3	QF4	速
+www.PL	STATU1	0	0	0	0	所有断路器均打开
+STATU2	1	0	0	0	Ⅰ段市电进线单路闭合
+STATU3	0	1	0	0	Ⅱ段审电进线单路闭合
+STATU4	1	1	0	0	双路市电进线均闭合，系统最终运行态
+STATUS	0	1	1	0	Ⅱ段市电进线和母联用合
+STATU6	1	0	1	0	Ⅰ段市电进线和母联闭合
+STATU7	0	0	0	1	发电机进线闭合
+STATU8	0	0	1	1	发电机建线和母联闭合
+STATU9	0	0	1	0	仅母联用合
+STATU10	1	1	1	0	非法欣态：进线和母联均闭合
+(4) 范例系统中 PLC 控制程序的第一部分	备自投程序分析
+备自投程序如图6-53所示。
+图6-53中的变量代码意义表见表6-24。
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

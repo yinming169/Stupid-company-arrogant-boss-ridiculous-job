@@ -1,0 +1,57 @@
+<!-- page 351 -->
+PLCWORLD	1A+%	4'Á1/4C	www.PLc
+9货	低压或套开关设备的辅助回路及控制原理
+输入回路处理程序
+TON	TON
+QFI HAND S	QF1HAND	SB31 S	SB31
+T120MS	T120MSEND	T120MS	T120MSEND
+QFI_S	TON	QF1	NOL	SB32
+T120MS	T120MSEND	SB32 S
+TON	T120MS	TON	T120MSEND
+SB1I S	SB11	QF3_F_S	QF3_F
+T120MS	T120MSEND	T120MS	T120MSEND
+SB12 S	TON	NON
+SB12	QF4_S	QF4
+T120MS	T120MSEND	T120MS	T120MSEND
+QF1_F_S	TON	QF1_F	TON
+T120MS	DY36	INCOMING4 LV
+T120MSEND	TIS	TISEND
+QF2 S	TON	QF2	TON
+QF2HAND_S	QF2HAND
+T120MS	T120MSEND	T120MS	T120MSEND
+SB21 S	TON	S821	QF3HAND_S	TON
+QF3HAND
+T120MS	T120MSEND	T120MS	T120MSEND
+SB22 S	TON	SB22	TON
+QF4HAND_S	QF4HAND
+T120MS	TI2MMEND	T120MS	T120MSEND
+TON
+QF2 F S	T120MSEND	QF2 F	永宏
+T120MS
+TON	QF3
+QF3 S	T120MSEND	四方维控
+T120MS
+图6-50 范例系统的输入开关量处理程序
+表6-23 输入开关量处理程序中各个变量代码的意义
+变量代码	意义	www.PLCworld.cn	说	明
+www.PLCworld.cn	QFzHAND	=1、2、3、4，是断路器编码；	1"	表示有效，“0”
+某断路器处干手动操作模式	表示无效	15021230050
+“x”=1、2、3、4，是断路器编码；	"1"	表示闭合。	"0"
+QFx	某断路器的状态	表示分闸
+QFx_F	“x”=1、2、3、4，是断路器编码；	“1”表示闭合，“0”
+某断路器的保护动作状态	表示分闸
+INCOMINGx_LV	“x”=1、2、3、4，是断路器编码；	“1”表示出现故障。
+某段进线失压故障	“0”表示正常
+SBxn	“x”=1、2、3、4，是断路器编码；	“n”=1 表示合阐，
+合闸和分闸按钮状态	“n” =2 表示分闸
+(2) 范例系统的操作模式处理程序（见图6-51)
+QF1HAND	AND
+QF2HAND	自动操作模式启用
+QF3HAND	QF4HAND	TON
+AUTO
+TIS	TISEND
+图6-51 范例系统的操作模式处理程序
+图6-51中，当且仅当QF1~QF4均处于自动操作模式时，即变量QFxHAND均等于1时，
+TON延迟1s后使得变量AUTO有效，也即允许PIC程序对范例系统实施自动测控操作。
+(3)范例系统中的电力系统状态分析程序（见图6-52)
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

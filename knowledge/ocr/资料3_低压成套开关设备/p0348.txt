@@ -1,0 +1,28 @@
+<!-- page 348 -->
+GWOR!,D	Á1/4Ç	www.PL
+·338	低压成套开关设备的原理及其控制技术
+tis/a0	9
+VN
+YOAI	5
+3es	1m0	oA	段进线主回路和辅助回路
+VCXAAI	永宏Ⅰ四方维控
+m	口
+Y
+LI
+910	R1.4	VOAA	利用PLC 实现测控的范例系统I
+SII
+www.PLCworld.cff	RL2
+www.PLCworld.cn	110	118	15021230050
+012	0T8
+121	III	RLOOM
+2
+2	OID	N
+>z	M12	Z
+景	6
+m	A601	1096	109N	P16.JW1d	*0r0r
+2
+A04V	1040	10PN	A411
+φ1.
+ANY
+F
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

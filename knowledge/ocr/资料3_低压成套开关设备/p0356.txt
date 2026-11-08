@@ -1,0 +1,47 @@
+<!-- page 356 -->
+LGWORLD	Á1/4C	www.PL口
+低压成套开关设备的原理及其控制技术
+第一组的条件是：
+故障记录LV_FAULT有效，I段进线电压恢复正常INCOMING1_LV =0，而且低压系
+统的状态是 STATU5（QF1=0，QF2=1，QF3=1），I段进线也未出现保护动作 QF1_F
+=0。
+第二组的条件是：
+故障记录LVFAULT 有效，Ⅱ段进线电压恢复正常INCOMING2LV =0，而且低压系
+统的状态是STATU6（QF₁=1，QF2=0，QF3=1)，Ⅱ段进线也未出现保护动作QF2_F=
+O。此两组条件被送到 OR 模块中启动 TON 延迟3s 再使母联分闸变量 AAQF3YO 执行打开
+母联的操作。
+由此可见故障记录LV_FAULT变量在程序中的重要性，LV_FAULT变量在整个备自投
+程序中起到核心的作用。
+5）图6-53中的失电压故障记录LV_FAULT的置位与复位（见图6-58）。我们已经知
+道在整个备自投程序中最重要的参数就是失电压故障记录LVFAULT，失电压故障记录LV
+FAULT有效与否是区分低压电网处于正常工作状态还是失电压备自投状态的标志。
+使得失压故障记录LV_FAULT有效的条件是：任一路低压进线出现失电压，同时母联	永宏
+断路器已经闭合，满足这些条件后LVFAULT =1置位。
+LV_FAULT被置位后需要一直持续到系统完全恢复，但LV_FAULT的置位条件在过程	1四方Ⅰ维控
+中随着程序的运行会丧失。为了保持LVFAULT的值一直到低压电网恢复正常的时刻，程
+序中使用了“=S”置位模块对其实施置位闭锁。LVFAULT的值将一直保持到出现”=R”
+复位模块后予以复位解锁为止。
+www.PLCworld.cn	我们来看图6-58：	www.PLCworld.cn	15021230050
+LIR
+INCOMINGI IV	AM11
+INCUMING2 LY	OR
+AA QF YVC
+LY EAUILT_RISTOIR!)	LV FAEET
+(INV
+ANI	STATU
+INLUMING LV	UR
+IVISTEPI	STATUL	INCTMINGT IV	TON
+IV FAUET
+AND
+LV FAURT	LV FAUI.T RISTOR!
+STATL4
+图6-58 失电压故障记录 LV _FAULT的置位与复位
+解除失电压故障记录LVFAULT的条件有两组，其一是双路电压正常且低压电网也恢复
+了STATU4状态（QF₁=1，QF2=1，QF3=0)；其二是电力系统处于刚送电的初始化状态，此
+时所有的断路器均分闸且发电机未起动（双路失电压起动发电机进程标志BZTSTEP1=0）。
+两组条件送入 OR 模块，OR 模块的输出启动 TON 延迟 4s 判误，判误结束后 TON 延时
+当LVFAULT被解除后，若低压电力系统处于 STATU4运行状态，则两者的 AND 逻辑
+将驱动复位模块“= R”使得双路失电压恢复进程标志LV_FAULT_RESTOR1=0。
+(5) 范例系统中PLC 控制程序的第二部分——双路失电压处理程序
+双路失电压的程序如图6-59所示。
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

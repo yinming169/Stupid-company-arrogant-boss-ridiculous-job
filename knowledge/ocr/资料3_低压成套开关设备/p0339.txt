@@ -1,0 +1,25 @@
+<!-- page 339 -->
+WORLD	Á1/4C	www.PL
+章	低压成套开关设备的辅助回路及控制原理
+O:	22	HLHLHLKA3
+KA2	27
+50	22
+20
+611	YO	自动操作模式下的两进线一母联之Ⅰ段进线主回路和辅助回路
+#
+Kr2	永宏四方维控
+SBE	KT1KAKT2
+KV1
+Www.PLCworld.cn
+www.PLCworld.cn	10	15021230050
+Z	低电压壁电器
+2
+0	B601
+PA	6
+C401	N40
+PE	φ1
+AV	N
+AS01	11
+'90
+PDG
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

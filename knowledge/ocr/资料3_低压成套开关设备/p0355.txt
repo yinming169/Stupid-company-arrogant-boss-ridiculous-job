@@ -1,0 +1,51 @@
+<!-- page 355 -->
+PLCWORD	A±%4	Á1/4C	www.PL
+9	低压或套开关设备的辅助回路及控制原理
+3）图6-53中的I段进线断路器QF；和Ⅱ段进线断路器 QF2的分闸条件及操
+(见图6-56)。
+图 6-56右上部的AND其输入条件中 INCOMINGLV =1表示I段进线出现失压，而第
+二个条件 STATU4 =1 表示两进线断路器均闭合，在此条件下 AND 的输出将启动 TON 延迟
+1s后驱动I段进线分闸变量AA_QF1YO执行分闸操作进程。
+图 6-56 左上部的 AND 输入条件有3个，其一是 INCOMING_LV =1 表示 I 段进线出现
+失压，其二是LV_FAULT =1 表示故障记录有效，其三是STATU2 表示I段进线处于闭合而
+其他断路器均分断，在此条件下 AND的输出也将启动 TON 延迟1s后驱动 I段进线分闸变
+量 AAQF1YO 执行分闸操作进程。
+AND	AND
+INXOMINGI LV	STATL4	OR
+LV FAULY	INCOMINKI LV	TON
+STATU2	AA_QFIYO
+AND	TIS	TISUND
+AND
+INCOMENG2_LV	STATL4	OR
+LV FAULY	STATU3	INCOMINKIE LV	TON
+AA_QF2YO
+TISEND	永宏
+图6-56 I段和Ⅱ段进线断路器QF1、QF2的分闸条件及操作程序	Ⅰ四方
+由于上述两项操作对象都是AA_QF1YO，所以两套 AND的输出均送往 OR模块合并后
+再驱动 TON 模块。	维控
+上述两种对 QF1的分闸操作条件不同：
+www.PLCworld.cn	并且Ⅰ段进线出现了失电压；
+后者则是在I段进线电压恢复期间再次失压，此时必定有LV_FAULT=1，并且电力系	15021230050
+统的状态是STATU2（QF1=1，QF2=0，QF3=0）。
+Ⅱ段进线断路器的分闸条件同Ⅰ段进线断路器，请读者自行分析。
+4）图6-53中的母联断路器QF3的合闸和分闸条件及操作程序（见图6-57)。母联断路
+器的合闸条件必定是I 段进线或Ⅱ段进线出现了失电压，即INCOMING1LV 或者INCOM-
+ING2LV中某一个等于1，同时出现失压故障的进线断路器已经分闸而电压正常的进线断
+路器仍然保持闭合状态，即 STATU2或者 STATU3中某一个等于1。这些条件被送到两套 OR
+模块，而 OR 模块的输出再送到 AND 模块。AND 模块检测到条件满足后启动 TON 延迟
+500ms再使母联合闸变量AA_QF3YC 执行闭合母联的操作。
+OR	AND
+OR	INCOMINGI LV	TON
+STAT1/2	INCDMING2_LV	AA_QF3YC
+STATU3	T500MS
+T500MSFND
+AND
+AND	LV FAULT
+LV FAULT	ATENINOON
+INCOMING2 LV	1140	OM	TON
+QF2_F	STATUS
+STAFL6	AA_QF3YO
+T3S	TSSEND
+图6-57 母联断路器 QF3的合闸和分闸条件及操作程序
+母联断路器的分闸条件有两组：
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050

@@ -1,0 +1,47 @@
+<!-- page 358 -->
+LGWORLD	+4	Á14Ç	www.PL
+348	低压或套开关设备的原理及其控制技术
+1）图6-59 中的双路失电压处理程序标志变量 BZTSTEP1的置位闭锁和复位解锁。
+双路失电压时需要程序干预的低压电网工作状态包括：STATU4、STATU5和STATU6，同时
+双路失电压处理程序标志变量 BZTSTEP1 和失电压恢复程序标志变量 RESTOR 尚未置位闭
+锁，因此双路失电压处理程序标志变量 BZTSTEP1置位闭锁的条件如图6-60所示。
+AND
+INCOMING1 LV
+INCOMING2 LV
+OR	AUTO
+STATU4	BZTSTEPI
+STATUS	RESTOR	-S
+STATU6	BZTSTEP!
+AND
+RESTOR
+AA G START
+STATUR	-R
+BZTSTEPI	BZTSTEP1
+图6-60 双路失电压处理程序标志变量 BZTSTEP1 的置位闭锁和复位解锁
+图6-60 中状态 STATU4~ STATU6 先用逻辑或处理，然后再将逻辑或的输出与I段低压	永宏
+电压变量INCOMING1_LV、Ⅱ段低压电压变量INCOMING2_LV和自动操作模式变量AUTO
+进行逻辑与，最后再和BZTSTEP1、RESTOR进行逻辑与，最终结果用“=S”模块对双路失	四方维控
+压处理程序标志变量 BZTSTEP1 置位闭锁。
+标志变量 BZTSTEP1 复位解锁的条件是：电力系统的状态是 STATU8，即两进线断路器
+QF1和QF2已经打开，发电机进线QF4和母联QF3均闭合（QF1=0，QF2=0，QF3=1，
+QF4 =1)；发电机已经正常工作 AA wWwSPMORvotid标志变量 BZTSTEP1 的值等于1 且失电
+www.PLCworld.cn	压恢复程序标志变量RESTOR的值也等于1。以上这四个变量若均有效，其值用逻辑与处理	15021230050
+后再驱动“=R”复位解锁模块对BZTSTEP1 执行复位解锁。
+2） 图6-59中的双路失电压的程序操作进程：
+第一步：起动发电机。
+因为发生双路失电压时电力系统的工作状态在STATU4~STATU6之中，同时程序进程
+还必须已经进入 BZTSTEP1 中，所以对 STATU4 ~ STATU6 取逻辑或后再和 BZTSTEP1 取逻辑
+与，最后的输出启动TON执行2秒的延时判误，最后用“=S”模块对起动发电机的变量
+AAG_START置位闭锁，如图6-61所示。
+STATUH	OR
+AND
+STANLUS	02TS119	NOL
+STATUS	AA G START
+图6-61 双路失电压的程序操作进程的第一步：起动发电机
+AA_C_START置位后，立即执行起动发电机的操作进程。发电机被起动后要一直延
+续到程序重返备自投后才能被关闭。因此AA_G_START的置位闭锁尤为重要。
+发电机起动需要大约接近10s的时间，在这段时间里完全可能辅助回路因为系统失电使
+得PLC停止工作。因此起动发电机的PLC出口继电器要使用常闭触点再串联上操作模式选
+择开关的“自动”挡位，如图6-62所示。
+读者可能最关心的是PLC在辅助电源瞬间失电后能否恢复到起动发电机的程序位置。
+PLC 变频器 触摸屏 伺服 软启动 电气工程 15021230050
