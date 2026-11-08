@@ -1,65 +1,18 @@
 # 高低压柜报价 Skill
 
-> 最新规则：单表按柜分区；铜排须提供经核对的分段。图纸识别和配套件尚需人工复核，以 [SKILL.md](SKILL.md) 和 [统一入口](references/统一入口.md) 为准。
+用于辅助分析 DWG、DXF 和 PDF 电气图纸，整理柜箱、元器件、铜排明细和报价资料。先阅读 `SKILL.md`，再依实际任务读取对应的规则文件。图纸事实、预设配置、推算和缺失项必须分别记录；识别结果及参数应人工核对。
 
-把电气图纸变成可报价的 Excel 材料清单，并自动配齐配套件。
+## 本次更新
 
-## 能力
+- 材料单采用用户指定的单工作表、分柜区块及完整规格描述；软启动器的电机功率与设备功率分别核对，接触器的电流、极数、线圈电压、使用类别和配套件按规则检查。
+- 铜排按主排、支路、连接、N、PE 等实际部分逐段计算，净重与采购量分别列示，共用母排依据已确认的分摊规则归属；未知参数保留待确认。完整规则见 `references/低压配电列柜铜排总用量规则.md`。
+- 六份原始资料的页级检索和专题学习成果见 `knowledge/六份资料索引/00_学习成果与覆盖.md`。索引和 OCR 用于定位，数字、图表与公式应回原书核查，标准状态和厂家资料应另行确认。
+- 金冠项目图纸、材料单和核对记录见 `assets/项目归档/金冠选铁磨浮车间/`。其中待复核表格和铜排估算不能直接当成已确认采购清单。
 
-- **图纸解析**：DWG（经 LibreDWG 转 DXF）/ DXF / 矢量 PDF / 扫描件 OCR
-- **元器件识别**：型号、数量、柜型、柜体尺寸、铜排规格
-- **配套件自动配齐**：马达保护器、接触器、变频器、软启动器等按规则配附件
-- **报价单生成**：按用户既有「分项报价表」格式输出，含分项、单价、加价率、利润
-- **知识检索**：五本配电资料全文检索，查选型依据
+## 使用及迁移
 
-## 目录
+技能主入口为 `SKILL.md`；在本目录下可用 `python scripts/book_index.py status` 查看索引覆盖，使用 `python scripts/book_index.py search 接触器 --book 资料1` 检索。可用的 Python 路径与迁移提示见 `knowledge/六份资料索引/00_学习成果与覆盖.md`。
 
-```
-switchgear-quote/          skill 本体
-├── SKILL.md               技能说明与工作流
-├── scripts/               可执行脚本
-│   ├── pipeline.py        一键：图纸 → 报价单
-│   ├── dispatch.py        图纸分流
-│   ├── extract_dxf.py     DXF 提取
-│   ├── extract_pdf.py     PDF 提取
-│   ├── classify.py        型号/柜型/尺寸识别
-│   ├── price_match.py     价格库匹配 + 加价
-│   ├── build_quote.py     生成报价 Excel
-│   └── template_quote.py  按用户模板出表 + 配齐配套件
-├── references/            规则与知识
-│   ├── recognition-rules.md     型号识别规则库
-│   ├── electrical-knowledge.md  选型知识库
-│   ├── accessory_rules.json     配套件规则
-│   └── markup_rates.json        加价率
-└── assets/
-    ├── price_db_template.xlsx   价格库模板
-    └── 标准参考格式.xlsx        用户标准报价格式（单柜分项报价表）
-```
+本地完整备份位于 `D:/switchgear-quote-full-backup/`。六份教材原始 PDF 存在其 `source_books/`，旧文字库在同级 `knowledge/`；本技能自带页级索引及本次 OCR，可离线检索。要在其他电脑核对原图或完整重建索引，请同时保留这些原件和目录的相对关系；本机绝对路径不是其他电脑通用路径。
 
-## 快速开始
-
-```bash
-# 一键生成报价单
-python scripts/pipeline.py --input <图纸或目录> --db <价格库.xlsx> --out 报价单.xlsx
-
-# 按用户模板出配齐版
-python scripts/template_quote.py <源清单.xlsx> --out <配齐版.xlsx>
-```
-
-## 依赖
-
-```bash
-python -c "import ezdxf, pdfplumber, fitz, openpyxl, pandas"
-```
-
-DWG 需先用 LibreDWG 转 DXF：
-
-```bash
-dwg2dxf.exe -o out.dxf in.dwg
-```
-
-## 免责与边界
-
-- 本 skill 是**选型逻辑与流程工具**，不是参数手册。最终参数以厂家样本为准。
-- 铜排用量、柜体部件数量为**推算值**，报价前必须人工复核。
-- 价格只能来自用户自有价格库，不联网抓价、不猜价。
+GitHub 仓库不包含本机的 OCR 软件运行环境 `ocr_runtime/` 和 Python 缓存；需要重新 OCR 时按环境安装脚本依赖。软件不能保证自动识图、附件补齐和柜体数量无遗漏，报价及采购前应逐项复核；价格未知时不得编造。

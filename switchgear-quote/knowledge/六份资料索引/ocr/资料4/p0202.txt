@@ -1,0 +1,62 @@
+186
+工业与民用配电设计手册
+旺点电气realiree网友制作www.wangd.com仅洪网友学习之用请勿商用
+Z"gi = ( Rd·Gl + R.G1) + j( x"ci + X.c1) = Rc1 + jX 
+(4 - 57)
+Z'c1 = ( Rd·c1 + R.c1) + j( X'd.G1 + X1.G: ) = RG1 + jX'cl
+X1-G1
+X"d-G1
+T"Gi = T"a-c1
+X1-G1
+1
+X'-G1
+X1.GI
+1
+X'd.G1
+Tc = T'd·G1
+(4 -58)
+X1.C1
+Xd·G1
+X1-G1
+Td·G1 +2πfRdG1
+R1.G1
+1+
+Rd-GI
+第四章
+发电机G2
+Z"c2 = ( Rd·G2 + R1-G2) + j( X"d·c2 + X1.c2) = Rc2 + jX"c21
+(4 - 59)
+Z'c2 = ( Rd-G2 + R.G2) + j( X'd.c2 + X1-G2) = Rc2 + jX'c2
+X1.G2
+1
++
+X"d-G2
+T"c2 = T"d·G2
+X1.G2
+X'd.G2
+X1.G2
+X'a.G2
+T'c2 = T'd·G2
+(4 -60)
+X1.G2
+1
++
+Xd.G2
+X1.G2
+Ta·G2 + 2πfRd.G2
+TG2
+R1.C2
+1+
+Rd·G2
+电动机M1、M2..·和Mn
+Z"M = R"m + jX'M1
+(4 -61)
+Z'M = R'M1 + jX'M1
+X"M1
+TzMI = TzM XM
+(4 -62)
+X"M!
+Tf-M1 = 2nfR"M1
+Z"M2 = R"m2 + jX"M2
+(4 -63)
+Z'M2 = RM2 + j X'M2
