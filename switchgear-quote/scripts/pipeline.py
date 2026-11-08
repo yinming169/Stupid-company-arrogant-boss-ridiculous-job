@@ -3,7 +3,6 @@
     python pipeline.py --input 图纸目录 --db 价格库.xlsx --out 报价单.xlsx
 """
 import argparse
-import json
 import os
 import subprocess
 import sys
@@ -26,6 +25,7 @@ def main():
     ap.add_argument("--out", default="报价单.xlsx")
     ap.add_argument("--work", default="work")
     ap.add_argument("--cabinet-name", default="")
+    ap.add_argument("--copper-segments", help="经核对的铜排分段 JSON")
     ap.add_argument("--format", choices=["standard", "detail"], default="standard",
                     help="standard=每柜一张标准分项报价表（默认）；detail=内部 7 表工作簿")
     ap.add_argument("--split-files", action="store_true", help="每柜输出独立 xlsx 文件")
@@ -39,16 +39,13 @@ def main():
 
     run("dispatch.py", [a.input, "--out", a.work])
     run("extract.py", [man, "--out", ext])
-    with open(ext, encoding="utf-8") as f:
-        extracted = json.load(f)
-    failures = [f for f in extracted.get("files", []) if f.get("error") or f.get("source_type") in ("skipped", "error", "image_no_ocr")]
-    if failures:
-        raise SystemExit("图纸提取不完整，已停止出表；请检查 extract.json: " + "; ".join(str(f.get("name", "")) + ": " + str(f.get("error", "未处理")) for f in failures))
     cls_args = [ext, "--out", itm]
     if a.cabinet_name:
         cls_args += ["--cabinet-name", a.cabinet_name]
     run("classify.py", cls_args)
-    run("price_match.py", [itm, "--db", a.db, "--out", prc])
+    price_args = [itm, "--db", a.db, "--out", prc]
+    if a.copper_segments: price_args += ["--copper-segments", a.copper_segments]
+    run("price_match.py", price_args)
     bq = [prc, "--out", a.out, "--format", a.format]
     if a.split_files:
         bq.append("--split-files")

@@ -123,7 +123,7 @@ STANDARD_MODELS = {
 
 def _power_prefix(line):
     """从图纸标注提取电机功率，生成型号前缀：适配电机功率 7.5kW。"""
-    m = re.search(r"(\d+(?:\.\d+)?)\s*[kK][wW]", str(line or ""))
+    m = re.search(r"(?:适配电机功率|电机功率)\s*[:：=]?\s*(\d+(?:\.\d+)?)\s*[kK][wW]", str(line or ""))
     return f"适配电机功率 {m.group(1)}kW。" if m else ""
 
 
@@ -622,6 +622,8 @@ def extract_items(extract):
         # 电动机保护的塑壳 = 马保配套开关，辅助点直接写入型号（不进备注）
         if it.get("name") == "塑壳断路器" and "电动机保护" in it["model"]:
             it["model"] = it["model"].rstrip("。") + "。含报警辅助点和开关辅助点。"
+        if '接触器' in it.get('name', ''):
+            it['model'] = (it['model'] + '。辅助触点3常开+2常闭；线圈电压、使用类别按图核实。').strip('。') + '。'
         # 四类按用户规则表统一写法：型号=技术要求描述，备注=配件说明（不并入型号）
         std = STANDARD_MODELS.get(it.get("name", ""))
         if std:
@@ -719,48 +721,8 @@ def _find_bus_current(lines, items):
 
 
 def derive_copper(items, size, cab_count, lines):
-    current, basis = _find_bus_current(lines, items)
-    if not current:
-        return [], ["铜排：未找到主母排电流，无法推算，需人工填写"]
-
-    spec, area = copper_spec_by_current(current)
-    w = size[0] if size else 800
-    # 双排/三排写法 2×(100×10) 才是多股，普通 50×6 是单根
-    m = re.match(r"TMY-(\d)×\(", spec)
-    strands = int(m.group(1)) if m else 1
-
-    # 每柜主母排：3相 + N + PE = 5 根，长度 = 柜宽 + 搭接余量 0.3m
-    per_cab_len = round((w + 300) / 1000, 2)
-    total_len = round(per_cab_len * 5 * cab_count, 2)
-    weight = copper_weight_kg(total_len, area, strands)
-
-    rows = [{
-        "name": "主母排", "spec": spec, "length_m": total_len,
-        "weight_kg": weight, "qty": cab_count,
-        "basis": f"{basis}；按 {cab_count} 柜 × 5 根(3P+N+PE) × (柜宽{w}+搭接300mm) 推算",
-    }]
-
-    # 分支排估算：按回路数 × 0.8m
-    branches = len([i for i in items if i["category"] in ("断路器", "开关")])
-    if branches:
-        bl = round(branches * 0.8, 2)
-        bspec, barea = copper_spec_by_current(max(63, current // max(branches, 1)))
-        rows.append({
-            "name": "分支排", "spec": bspec, "length_m": bl,
-            "weight_kg": copper_weight_kg(bl, barea, 1), "qty": branches,
-            "basis": f"按 {branches} 个开关回路 × 0.8m 估算（粗估，需按实际排布复核）",
-        })
-
-    # 接地铜排（PE 排）：每柜 2m，TMY-30×4，计入铜排总量（不单列辅材）
-    pe_len = round(2 * cab_count, 2)
-    rows.append({
-        "name": "接地铜排", "spec": "TMY-30×4", "length_m": pe_len,
-        "weight_kg": copper_weight_kg(pe_len, 30 * 4, 1), "qty": cab_count,
-        "basis": f"按 {cab_count} 柜 × 2m/柜 估算",
-    })
-
-    return rows, [f"铜排为推算值，非图纸标注，报价前请复核：{basis}"]
-
+    # 不再自动假设三相、N、PE同规格及每柜搭接，也不重复计算PE。
+    return [], ['铜排未按图纸逐段确认：请按 copper_segments.py 输入真实或标记为估算的分段，不将缺失项视为零。']
 
 # ---------------- 柜体部件 ----------------
 
@@ -793,8 +755,8 @@ def cabinet_parts(size, cab_count, voltage, cab_type="", has_meter=True):
     - 其余辅材合并为一项「其他辅材（总成）」，型号直接写「若干」；
     - 接地铜排由 derive_copper 计入铜排总量。
     """
-    w, h, d = (size or (800, 2200, 600))
-    cab_model = f"{cab_type} {w}×{h}×{d}" if cab_type else f"{w}×{h}×{d}"
+    w, h, d = (size or (None, None, None))
+    cab_model = (f"{cab_type} {w}×{h}×{d}".strip() if size else "")
     per = [
         ("柜体", "柜体（整体）", cab_model, "套", 1, "1 套/柜"),
         ("辅材", "柜体风机", "ZL-805+200FZY2-D AC220V", "套", 2, "2 套/柜（规则表）"),
@@ -840,7 +802,8 @@ def main():
     res["copper"] = copper
     cab_type = a.cabinet_type or detect_cabinet_type(lines)
     res["cabinet_type"] = cab_type
-    res["cabinet_parts"] = cabinet_parts(size_t, cab_count, res["voltage_class"], cab_type)
+    res["cabinet_parts"] = []  # 不将未知柜体尺寸和统一配置当作实际配置；人工逐柜确认。
+    res["warnings"].append("柜体及固定配套件须逐柜确认后录入，未自动均摊。")
     res["warnings"].extend(cwarn)
 
     write_json(a.out, res)

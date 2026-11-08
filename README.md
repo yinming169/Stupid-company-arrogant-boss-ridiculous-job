@@ -1,6 +1,8 @@
 # 高低压柜报价 Skill
 
-从电气图纸（DWG / DXF / PDF）提取元器件，按定稿的**标号规则**生成**每台柜/箱单独一张**的分项报价表。
+> 最新用法：先读取 [技能入口](switchgear-quote/SKILL.md) 和 [统一入口](switchgear-quote/references/统一入口.md)。多个柜箱放在同一工作表；铜排采用人工确认的分段输入。图纸识别、配套件与铜排结果须人工复核，项目资料见 [金冠项目归档](switchgear-quote/assets/项目归档/金冠选铁磨浮车间)。下方历史描述如有冲突，以技能入口和统一入口为准。
+
+从电气图纸（DWG / DXF / PDF）提取元器件，按标号规则生成单工作表、按柜箱分区的分项报价表。
 
 ## 仓库内容（完整）
 
@@ -32,8 +34,8 @@
 ### 1. 克隆
 
 ```bash
-git clone https://github.com/yinming169/Stupid-company-arrogant-boss-ridiculous-job-sikll.git
-cd Stupid-company-arrogant-boss-ridiculous-job-sikll
+git clone https://github.com/yinming169/Stupid-company-arrogant-boss-ridiculous-job.git
+cd Stupid-company-arrogant-boss-ridiculous-job
 ```
 
 ### 2. 安装 Python 依赖

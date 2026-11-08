@@ -140,7 +140,7 @@ def price_rows(items, db, cfg, kind="item"):
     for it in items:
         r, how, score = match_one(it.get("model", ""), it.get("name", ""), it.get("brand", ""), db,
                                   prefer_name=prefer_name)
-        qty = it.get("qty", 0) or 0
+        qty = it.get("qty")
         rate = markup_for(it, cfg)
         row = dict(it)
         row["qty"] = qty
@@ -148,8 +148,8 @@ def price_rows(items, db, cfg, kind="item"):
         if r and r["price"] is not None:
             row["cost"] = r["price"]
             row["price"] = round(r["price"] * (1 + rate), 2)
-            row["amount"] = round(row["price"] * qty, 2)
-            row["cost_amount"] = round(r["price"] * qty, 2)
+            row["amount"] = round(row["price"] * qty, 2) if qty is not None else None
+            row["cost_amount"] = round(r["price"] * qty, 2) if qty is not None else None
             row["match"] = how
             row["match_score"] = score
             row["db_model"] = r["model"]
@@ -176,9 +176,19 @@ def main():
     ap.add_argument("--db", required=True, help="价格库 xlsx/csv")
     ap.add_argument("--markup", default=None, help="加价配置 json（默认 references/markup_rates.json）")
     ap.add_argument("--out", default="work/priced.json")
+    ap.add_argument("--copper-segments", help="经核对的分段输入 JSON；不代表缺失段为零")
     a = ap.parse_args()
 
     items_doc = read_json(a.items)
+    if a.copper_segments:
+        from copper_segments import calculate
+        calc = calculate(read_json(a.copper_segments))
+        items_doc['copper'] = [{'name': seg['category'], 'spec': f"TMY-{seg['width_mm']}×{seg['thickness_mm']}", 'cabinet': seg['cabinet'], 'weight_kg': seg['weight_kg'], 'length_m': seg['net_length_m'], 'basis': seg['basis'], 'qty': seg['weight_kg'], 'status':seg['status']} for seg in calc['segments']]
+        items_doc.setdefault('warnings', []).append(calc['warning'])
+        if not calc['complete']:
+            items_doc['copper'].append({'name':'铜排未完成段（待确认）','spec':'','cabinet':'公共','weight_kg':None,'length_m':None,'qty':None,'basis':'铜排分段不完整，禁止视为零'})
+    if not a.copper_segments and not items_doc.get('copper'):
+        items_doc['copper'] = [{'name':'铜排（待逐段核对）','spec':'','cabinet':'公共','weight_kg':None,'length_m':None,'qty':None,'basis':'未输入铜排分段'}]
     db = load_db(a.db)
     if not db:
         raise SystemExit("价格库为空")
@@ -236,7 +246,7 @@ def main():
     print(f"价格库 {len(db)} 条")
     print(f"元器件 {len(comps)} 项，柜体部件 {len(parts)} 项，铜排 {len(copper)} 项")
     print(f"未匹配 {len(result['unmatched'])} 项（必须人工补价）")
-    if total_cost:
+    if total_cost and all(r.get("cost_amount") is not None and r.get("amount") is not None for r in comps + parts + copper):
         print(f"成本合计 {total_cost:,.2f}  报价合计 {total_price:,.2f}  毛利 {total_price - total_cost:,.2f} "
               f"({(total_price - total_cost) / total_price * 100:.1f}%)")
     print(f"-> {a.out}")

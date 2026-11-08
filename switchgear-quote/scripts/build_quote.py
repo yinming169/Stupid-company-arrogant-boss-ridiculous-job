@@ -443,72 +443,59 @@ def _draw_std_sheet(ws, project, cab_label, items, cab_rows, aux_rows, copper_ro
 
 
 def build_standard(priced, out, split_files=False):
-    """每台柜/箱单独一张完整分项报价表，各自独立核算材料、利润、税费、总价。
-
-    split_files=False：一个工作簿，每柜一个 sheet（默认，便于一次交付）
-    split_files=True ：每柜一个独立 xlsx 文件（便于单柜发给客户）
-    """
-    items = priced.get("items", [])
-    parts = priced.get("cabinet_parts", [])
-    copper = priced.get("copper", [])
-    project = priced.get("project", {}).get("name", "") or ""
-
-    groups, order = {}, []
-    for it in items:
-        cab = it.get("cabinet", "全部") or "全部"
-        if cab not in groups:
-            groups[cab] = []
-            order.append(cab)
-        groups[cab].append(it)
-    if not order:
-        order, groups = ["全部"], {"全部": []}
-
-    n = len(order)
-
-    def _share(src_rows):
-        """柜体部件/铜排按柜数均摊：数量、长度、重量、金额同步分摊。"""
-        out_rows = []
-        for p in src_rows:
-            q = dict(p)
-            for k in ("qty", "amount", "cost_amount", "length_m", "weight_kg"):
-                if q.get(k) is not None:
-                    q[k] = round(q[k] / n, 2)
-            q["basis"] = (p.get("basis") or "") + f"（{n} 柜均摊）"
-            out_rows.append(q)
-        return out_rows
-
-    part_share = _share(parts)
-    copper_share = _share(copper)
-    # 柜体作为整体一行；其余（母线框/绝缘子/照明/加热/温控/风机等）归辅材
-    cab_share = [p for p in part_share if p.get("category") == "柜体"]
-    aux_share = [p for p in part_share if p.get("category") != "柜体"]
-
-    def label_of(cab):
-        return "未归柜（需人工分配）" if cab == "全部" else cab
-
+    """六列单表，按柜分区；未知价格与无法分摊的项目不伪造。"""
     if split_files:
-        import os
-        base, ext = os.path.splitext(out)
-        paths = []
-        for cab in order:
-            wb = Workbook()
-            wb.remove(wb.active)
-            safe = _sheet_name("未归柜" if cab == "全部" else cab)
-            ws = wb.create_sheet(safe)
-            _draw_std_sheet(ws, project, label_of(cab), groups[cab], cab_share, aux_share, copper_share)
-            p = f"{base}_{safe}{ext}"
-            wb.save(p)
-            paths.append(p)
-        return paths
-
-    wb = Workbook()
-    wb.remove(wb.active)
+        raise ValueError('标准格式要求全部柜箱在同一工作表，不支持拆分文件')
+    from copy import copy
+    import os
+    from openpyxl import load_workbook
+    template = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', '九华新材_柜箱报价参考.xlsx')
+    ref = load_workbook(template).active
+    wb = Workbook(); ws = wb.active; ws.title = '分项报价表'
+    for col in 'ABCDEF':
+        ws.column_dimensions[col].width = ref.column_dimensions[col].width
+    def style_row(target, source):
+        for c in range(1,7):
+            src, dst = ref.cell(source,c), ws.cell(target,c)
+            dst.font = copy(src.font); dst.fill = copy(src.fill); dst.border = copy(src.border); dst.number_format = src.number_format; dst.protection = copy(src.protection)
+            dst.alignment = copy(src.alignment)
+        ws.row_dimensions[target].height = ref.row_dimensions[source].height or 25
+    groups = {}; order = []
+    def add(cab, row):
+        cab = str(cab or '').strip()
+        if cab in ('全部','—','公共','未归柜',''): cab = '未归柜（待确认）'
+        if cab not in groups: groups[cab]=[]; order.append(cab)
+        groups[cab].append(row)
+    for c in priced.get('cabinets', []):
+        cid = c.get('id')
+        if cid and cid not in ('全部','—') and cid not in groups: groups[cid]=[]; order.append(cid)
+    for section in ('items','cabinet_parts','copper'):
+        for it in priced.get(section, []): add(it.get('cabinet'), it)
+    if not order: add(None, {'name':'待确认','qty':None})
+    cabmeta = {str(c.get('id')):c for c in priced.get('cabinets', [])}
+    r=1
     for cab in order:
-        ws = wb.create_sheet(_sheet_name("未归柜" if cab == "全部" else cab))
-        _draw_std_sheet(ws, project, label_of(cab), groups[cab], cab_share, aux_share, copper_share)
-    wb.save(out)
-    return out
-
+        rows=groups[cab]; style_row(r,1); ws.merge_cells(start_row=r,start_column=1,end_row=r,end_column=3)
+        ws.cell(r,1,cab); ws.cell(r,4,'台'); ws.cell(r,5,cabmeta.get(cab,{}).get('count')); ws.cell(r,6,'以下为单台配置'); r+=1
+        for index,it in enumerate(rows,1):
+            style_row(r,2); name=it.get('name',''); model=it.get('model') or it.get('spec') or ''
+            qty = it.get('weight_kg') if it.get('category') == '铜排' else it.get('qty')
+            for col,val in enumerate((index,name,model,it.get('unit',''),qty,it.get('amount')),1): ws.cell(r,col,val)
+            ws.cell(r,3).alignment=Alignment(horizontal='left',vertical='center',wrap_text=True)
+            if len(str(model))>45: ws.row_dimensions[r].height = min(250, max(25, ((len(str(model))+25)//26)*15))
+            r+=1
+        # Only show subtotals once every item has a known quantity and cost/amount.
+        complete=(cab != '未归柜（待确认）' and '未归柜（待确认）' not in groups and bool(rows)) and all(x.get('cost_amount') is not None and x.get('amount') is not None and (x.get('weight_kg') if x.get('category')=='铜排' else x.get('qty')) is not None for x in rows)
+        material=round(sum(x['cost_amount'] for x in rows),2) if complete else None
+        profit=round(sum(x['amount']-x['cost_amount'] for x in rows),2) if complete else None
+        for j,label in enumerate(('材料小计','制造费用','利润','税费','产品报价')):
+            style_row(r,13+j); ws.cell(r,1,len(rows)+j+1); ws.cell(r,2,label)
+            # Manufacturing fee is an unknown input: leave tax and final price blank as well.
+            if j==0: ws.cell(r,6,material)
+            if j==2: ws.cell(r,6,profit)
+            r+=1
+        r+=1
+    ws.freeze_panes='A1'; wb.save(out); return out
 
 def main():
     ap = argparse.ArgumentParser()
@@ -527,7 +514,7 @@ def main():
             for p in result:
                 print(f"  {p}")
         else:
-            print(f"分项报价表（每柜一个 sheet）-> {result}")
+            print(f"分项报价表（单表分柜）-> {result}")
     else:
         path = build(data, a.out)
         print(f"报价单（7 表明细）-> {path}")
